@@ -82,7 +82,7 @@ foreach ($json['results'] as &$result) {
 
     }
 }
-$query = "SELECT highfives.text, highfives.redeemed, highfives.qty, users.first_name, users.last_name FROM highfives
+$query = "SELECT highfives.text, highfives.redeemed, highfives.qty, DATE_FORMAT(highfives.creation_ts, '%W %M %e %h%p') as 'date', users.first_name, users.last_name FROM highfives
             LEFT JOIN users ON highfives.creator_id = users.id
             ORDER BY creation_ts DESC LIMIT 50";
 $stmt  = $db->prepare($query);
