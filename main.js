@@ -25,6 +25,9 @@ function display(results) {
     //each object in the data set has a row, col, and r/g/b value
     jQuery.each(results, function(i, val) {
         var text = val['text'];
+        var redeemed = val['redeemed'];
+        var qty = val['qty'];
+        var creator = "@" + val['first_name']+ val['last_name'];
         console.log(text);
     });
 }

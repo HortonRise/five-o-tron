@@ -79,7 +79,9 @@ foreach ($json['results'] as &$result) {
   }
 }
 
-  $query = "SELECT * FROM highfives ORDER BY creation_ts DESC LIMIT 50";
+  $query = "SELECT highfives.text, highfives.redeemed, highfives.qty, users.first_name, users.last_name FROM highfives
+            LEFT JOIN users ON highfives.creator_id = users.id
+            ORDER BY creation_ts DESC LIMIT 50";
   $stmt   = $db->prepare($query);
   $stmt->execute();
   if ($stmt) {
