@@ -56,7 +56,7 @@ foreach ($json['results'] as &$result) {
         //check if the hashtag is in the text
         if (stripos($fiveText, "#highfive") || true) {
             //Add the new high fives to the database
-            $filterText = preg_replace('/(^|\s)@(\w*[a-zA-Z_]+\w*)/', '\1@<span>\2</span>', $fiveText);
+            $filterText = preg_replace('/(^|\s)@(\w*[a-zA-Z_]+\w*)/', '\1<span>@\2</span>', $fiveText);
             $query2 = "INSERT INTO highfives (id, creator_id, text, creation_ts, redeemed, qty)
           VALUES (:id, :user, :text, :ts, :redeemed, :qty)";
 
@@ -89,6 +89,7 @@ $stmt  = $db->prepare($query);
 $stmt->execute();
 if ($stmt) {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header('Content-Type: application/json');
     $json    = json_encode($results);
     echo $json;
 }
