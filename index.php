@@ -32,6 +32,7 @@
 			</div>
 			<div class="creator">
 				<h2 class="creatorH"></h2>
+				<p class="date"></p>
 			</div>
 		</div>
 	</div>

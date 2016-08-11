@@ -49,7 +49,7 @@ function process(results) {
 
     jQuery.each(results, function(i, val) {
         //console.log(this);
-        var newObj = {text:"", redeemed:"", qty:"", creator:"", recip:""};
+        var newObj = {text:"", redeemed:"", qty:"", creator:"", recip:"", date:""};
         var text = val['text'];
         var redeemed = val['redeemed'];
         var qty = val['qty'];
@@ -103,6 +103,7 @@ function process(results) {
                             newObj.qty = qty;
                             newObj.creator = creator;
                             newObj.recip = currentName;
+                            newObj.date = date;
 
                             testArray.push(newObj);
                         }
@@ -130,6 +131,8 @@ function process(results) {
         $("#hfText").html(testArray[num].text);
 
         $(".creatorH").html(testArray[num].creator);
+
+        $(".date").html(testArray[num].date);
 
         setTimeout(function(){
             $(".textWrapper").addClass("scaleUp");
@@ -175,6 +178,10 @@ function process(results) {
             $(".redeemedCircle").addClass("iconScaleUp");
         }, 2000);
 
+        setTimeout(function(){
+            $(".date").removeClass("invisible");
+        }, 2100);
+
 
 ///////
 ///////
@@ -184,6 +191,9 @@ function process(results) {
 ///////
 
 
+        setTimeout(function(){
+            $(".date").addClass("invisible");
+        }, 7900);
 
         setTimeout(function(){
             $(".creatorH").addClass("invisible");

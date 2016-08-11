@@ -30,7 +30,6 @@ p span{
 h1{
     color: #cccccc;
     font-size: 6vw;
-    opactity: 1;
     transition: all .5s;
     opacity: .25;
     /*text-align: center;*/
@@ -41,8 +40,9 @@ h2{
     text-align: right;
     font-size: 30px;
     margin-top: 26px;
-    opactity: 1;
+    opacity: 1;
     transition: all .5s;
+    margin-bottom: 4px;
 }
 
 h3 {
@@ -52,6 +52,15 @@ h3 {
     margin-top: 90px;
     font-weight: bold;
     opacity: .65;
+}
+
+.date{
+    color: #cccccc;
+    text-align: right;
+    font-size: 18px;
+    margin-top: 6px;
+    opacity: 1;
+    transition: all .5s;
 }
 
 #logo{
