@@ -115,25 +115,123 @@ function process(results) {
 
     var num = 0;
 
-    function cycleHF(){
+    function swapHF(){
+        num = (num + 1) % testArray.length;
+
+
+        setTimeout(function(){
+            $(".textWrapper").addClass("scaleUp");
+            $(".textWrapper").removeClass("scaleDown");
+        }, 200);
+
+        // setTimeout(function(){
+        //     $(".textWrapper").addClass("margin-top-nudge");
+        // }, 200);
+        //
+        // setTimeout(function(){
+        //     $(".textWrapper").removeClass("margin-top-nudge");
+        // }, 360);
+
+        setTimeout(function(){
+            $("#triangle-left").removeClass("quickInvisible");
+            $("#triangle-left").addClass("quickVisible");
+        }, 360);
+
+        setTimeout(function(){
+            $("#triangle-left").css("margin-top","-60px");
+        },340);
+
+        setTimeout(function(){
+            $(".recipH").removeClass("invisible");
+        }, 1200);
+
+
+
+        // setTimeout((function() {
+        //   $( ".textWrapper" ).animate({
+        //     opacity: 0.25,
+        //     left: "+=50",
+        //     height: "toggle"
+        //   }, 5000, function() {
+        //     // Animation complete.
+        //   });
+        // });
+
+
+
+        setTimeout(function(){
+            $("#hfText").removeClass("invisible");
+        }, 1600);
+
+        setTimeout(function(){
+            $(".creatorH").removeClass("invisible");
+        }, 2000);
+
         $(".recipH").html(testArray[num].recip);
 
-        $("#hfText").html(highFives[num].text);
+        $("#hfText").html(testArray[num].text);
 
         $(".creatorH").html(testArray[num].creator);
-        console.log(testArray);
-        window.setInterval(function () {
-            // increase by num 1, reset to 0 at 4
-            num = (num + 1) % testArray.length;
+        console.log("num");
 
-            $(".recipH").html(testArray[num].recip);
+        setTimeout(function(){
+            $(".creatorH").addClass("invisible");
+        }, 8000);
 
-            $("#hfText").html(testArray[num].text);
+        setTimeout(function(){
+            $("#hfText").addClass("invisible");
+        }, 8100);
 
-            $(".creatorH").html(testArray[num].creator);
-            //console.log(num);
-        }, 4000);
+        setTimeout(function(){
+            $(".recipH").addClass("invisible");
+        }, 8200);
+
+
+        setTimeout(function(){
+            $("#triangle-left").css("margin-top","-200px");
+        },8200);
+
+        setTimeout(function(){
+            $("#triangle-left").removeClass("quickVisible");
+            $("#triangle-left").addClass("quickInvisible");
+        }, 8230);
+
+        setTimeout(function(){
+            $(".textWrapper").addClass("scaleDown");
+            $(".textWrapper").removeClass("scaleUp");
+        }, 8500);
+
+
     };
+
+    function cycleHF(){
+        // $(".recipH").html(testArray[num].recip);
+        //
+        // $("#hfText").html(highFives[num].text);
+        //
+        // $(".creatorH").html(testArray[num].creator);
+        // console.log(testArray);
+        // window.setInterval(function () {
+        //     // increase by num 1, reset to 0 at 4
+        //     num = (num + 1) % testArray.length;
+        //
+        //     $(".recipH").html(testArray[num].recip);
+        //
+        //     $("#hfText").html(testArray[num].text);
+        //
+        //     $(".creatorH").html(testArray[num].creator);
+        //     //console.log(num);
+        //
+        //     setTimeout(function(){
+        //         $("#hfText").addClass("invisible");
+        //     }, 3000);
+        //
+        // }, 5000);
+
+        swapHF();
+        window.setInterval(swapHF, 11000);
+    };
+
 
     cycleHF();
 

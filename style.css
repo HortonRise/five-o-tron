@@ -6,6 +6,7 @@ h1, h2{
     font-weight: bold;
 }
 
+
 #content{
     width: 80%;
     margin: 0px auto;
@@ -15,18 +16,26 @@ p{
     color: #113a87;
     font-size: 42px;
     z-index: 10;
+    opactity: 1;
+    transition: all .5s;
 }
 
 h1{
     color: #cccccc;
-    font-size: 5vw;
+    font-size: 6vw;
+    opactity: 1;
+    transition: all .5s;
+    opacity: .33;
+    text-align: center;
 }
 
 h2{
     color: #cccccc;
     text-align: right;
     font-size: 27px;
-    margin-top: 22px;
+    margin-top: 26px;
+    opactity: 1;
+    transition: all .5s;
 }
 
 .textWrapper{
@@ -46,11 +55,56 @@ h2{
     display: block;
     margin-top: -60px;
     margin-left: 80%;
+    transition: all .6s;
+    -webkit-transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+    z-index: 1;
 }
 
 .highFive{
     display: block;
-    margin-top: 36%;
+    margin-top: 50%;
+}
+
+.invisible{
+    opacity: 0;
+    transition: all .3s;
+}
+
+.quickInvisible{
+    opacity: 0;
+}
+
+.quickVisible{
+    opacity: 1;
+}
+
+.margin-top-nudge{
+    margin-top: -20px;
+    transition: all .02s;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-timing-function: ease-in-out;
+}
+
+.scaleDown{
+    transform-origin: left top;
+    transform: scale(0);
+    transition: all .7s;
+    -webkit-transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+}
+
+.scaleUp{
+    transform-origin: left top;
+    transition: all .5s;
+    transform: scale(1);
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+}
+
+.margin-top-Up{
+    margin-top: -110px;
+    transition: all .6s;
 }
 /*
 .content{
