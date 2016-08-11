@@ -29,6 +29,7 @@ function display(results) {
         var redeemed = val['redeemed'];
         var qty = val['qty'];
         var creator = "@" + val['first_name']+ val['last_name'];
+        var date = val['date'];
         //console.log(text);
     });
 }
@@ -53,23 +54,27 @@ function process(results) {
         var redeemed = val['redeemed'];
         var qty = val['qty'];
         var creator = "@" + val['first_name']+ val['last_name'];
+        var date = val['date'];
 
         //console.log(creator);
         var hfText = text;
-        //console.log(hfText);
+        console.log(hfText);
         var textLength = hfText.length;
         var nameBool = false;
         var currentName = "";
         for(var j=0; j<textLength; j++){
-
+            // console.log(hfText[j] + " " + nameBool)
             if(hfText[j]=="@"){
                 nameBool = true;
                 currentName = currentName + hfText[j];
                 //console.log("@");
-            }else if (nameBool && hfText[j]!=" "){
+            }else if (nameBool && hfText[j]!="<"){
                 currentName = currentName + hfText[j];
-                //console.log(hfText[j]);
-            }else if (nameBool && hfText[j]==" " || hfText[j]==","){
+                //console.log(currentName);
+            //}else if (nameBool && hfText[j]=="<" || hfText[j]=="," || hfText[j]==" "){
+            }else if (nameBool && hfText[j]=="<"){
+                // console.log(hfText[j] + " " + nameBool)
+                // console.log("< FOUND");
                 var cxLength = cx.length;
                 for (var h=0; h<cxLength; h++){
                     if(currentName==cx[h]){
@@ -118,6 +123,13 @@ function process(results) {
     function swapHF(){
         num = (num + 1) % testArray.length;
 
+        console.log(testArray[num]);
+
+        $(".recipH").html(testArray[num].recip);
+
+        $("#hfText").html(testArray[num].text);
+
+        $(".creatorH").html(testArray[num].creator);
 
         setTimeout(function(){
             $(".textWrapper").addClass("scaleUp");
@@ -135,44 +147,43 @@ function process(results) {
         setTimeout(function(){
             $("#triangle-left").removeClass("quickInvisible");
             $("#triangle-left").addClass("quickVisible");
-        }, 360);
+        }, 300);
 
         setTimeout(function(){
             $("#triangle-left").css("margin-top","-60px");
-        },340);
+            $("#triangle-left").css("margin-left","80%");
+        },310);
 
         setTimeout(function(){
             $(".recipH").removeClass("invisible");
         }, 1200);
-
-
-
-        // setTimeout((function() {
-        //   $( ".textWrapper" ).animate({
-        //     opacity: 0.25,
-        //     left: "+=50",
-        //     height: "toggle"
-        //   }, 5000, function() {
-        //     // Animation complete.
-        //   });
-        // });
-
-
 
         setTimeout(function(){
             $("#hfText").removeClass("invisible");
         }, 1600);
 
         setTimeout(function(){
+            if(testArray[num].redeemed == "1"){
+                $(".redeemedIcon2").removeClass("displayNone");
+                $(".redeemedIcon").addClass("displayNone");
+            }
+        }, 1600);
+
+        setTimeout(function(){
             $(".creatorH").removeClass("invisible");
+            $(".redeemedCircle").removeClass("iconScaleDown");
+            $(".redeemedCircle").addClass("iconScaleUp");
         }, 2000);
 
-        $(".recipH").html(testArray[num].recip);
 
-        $("#hfText").html(testArray[num].text);
+///////
+///////
+/////// Transition In ^
+/////// Transition Out v
+///////
+///////
 
-        $(".creatorH").html(testArray[num].creator);
-        console.log("num");
+
 
         setTimeout(function(){
             $(".creatorH").addClass("invisible");
@@ -184,17 +195,20 @@ function process(results) {
 
         setTimeout(function(){
             $(".recipH").addClass("invisible");
+            $(".redeemedCircle").removeClass("iconScaleUp");
+            $(".redeemedCircle").addClass("iconScaleDown");
         }, 8200);
 
 
         setTimeout(function(){
             $("#triangle-left").css("margin-top","-200px");
-        },8200);
+            $("#triangle-left").css("margin-left","60%");
+        },8180);
 
         setTimeout(function(){
             $("#triangle-left").removeClass("quickVisible");
             $("#triangle-left").addClass("quickInvisible");
-        }, 8230);
+        }, 8190);
 
         setTimeout(function(){
             $(".textWrapper").addClass("scaleDown");
