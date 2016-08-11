@@ -15,8 +15,8 @@ function initialLoad() {
         //When you recieve it, run the JSON through the refresh function to update the browser
         .done(function(results) {
             //console.log(msg);
-            display(results);
-            console.log(results);
+            //display(results);
+            process(results);
 
         });
 }
@@ -29,87 +29,113 @@ function display(results) {
         var redeemed = val['redeemed'];
         var qty = val['qty'];
         var creator = "@" + val['first_name']+ val['last_name'];
-        console.log(text);
+        //console.log(text);
     });
 }
 
 
 
 
-$( document ).ready(function() {
+function process(results) {
 
     var highFives = [];
+    //console.log(results);
 
-    function getJSON() {
-        console.log("Poop");
-        var inner = $(".test").html();
-        $(".test").html("");
-        var parsed = JSON.parse(inner);
-        parsed = JSON.parse(parsed);
-        console.log(parsed);
+    var testArray = [];
 
 
-        var count = parsed.count;
-        //console.log(count);
-        var results = parsed.results;
-        //console.log(results);
-        var cx = ["@AnthonyAffinati", "@AmandaNyren", "@AlexArkoosh", "@AmelieProvosty", "@MikeGreen", "@KatelynMuenck", "@JeanZhang", "@JonathanLarson", "@JohnHorton", "@WillWatkins", "@StevenChen","@KyleBuckley", "@VanessaLacy","@ClairLoewy","@LouAmodeo"];
+    var cx = ["@AnthonyAffinati", "@AmandaNyren", "@AlexArkoosh", "@AmelieProvosty", "@MikeGreen", "@KatelynMuenck", "@JeanZhang", "@JonathanLarson", "@JohnHorton", "@WillWatkins", "@StevenChen","@KyleBuckley", "@VanessaLacy","@ClairLoewy","@LouAmodeo"];
 
-        if(count>50){
-            count=50;
-        }
+    jQuery.each(results, function(i, val) {
+        //console.log(this);
+        var newObj = {text:"", redeemed:"", qty:"", creator:"", recip:""};
+        var text = val['text'];
+        var redeemed = val['redeemed'];
+        var qty = val['qty'];
+        var creator = "@" + val['first_name']+ val['last_name'];
 
-        for(var i=(count-1); i>=0 ; i--){
-            //console.log(i);
-            var hfText = results[i].text;
-            //console.log(hfText);
-            var textLength = hfText.length;
-            var nameBool = false;
-            var currentName = "";
-            for(var j=0; j<textLength; j++){
+        //console.log(creator);
+        var hfText = text;
+        //console.log(hfText);
+        var textLength = hfText.length;
+        var nameBool = false;
+        var currentName = "";
+        for(var j=0; j<textLength; j++){
 
-                if(hfText[j]=="@"){
-                    nameBool = true;
-                    currentName = currentName + hfText[j];
-                    //console.log("@");
-                }else if (nameBool && hfText[j]!=" "){
-                    currentName = currentName + hfText[j];
-                    //console.log(hfText[j]);
-                }else if (nameBool && hfText[j]==" " || hfText[j]==","){
-                    var cxLength = cx.length;
-                    for (var h=0; h<cxLength; h++){
-                        if(currentName==cx[h]){
-                            //console.log(hfText);
-                            highFives.push(hfText);
+            if(hfText[j]=="@"){
+                nameBool = true;
+                currentName = currentName + hfText[j];
+                //console.log("@");
+            }else if (nameBool && hfText[j]!=" "){
+                currentName = currentName + hfText[j];
+                //console.log(hfText[j]);
+            }else if (nameBool && hfText[j]==" " || hfText[j]==","){
+                var cxLength = cx.length;
+                for (var h=0; h<cxLength; h++){
+                    if(currentName==cx[h]){
+                        //console.log(hfText);
+                        //highFives.push(hfText);
+                        highFives.push(this);
+
+                        var mostRecent;
+                        if(testArray.length>0){
+                            mostRecent = testArray[(testArray.length - 1)].text;
+                        }else{
+                            //mostRecent = 0;
                         }
-                    }
-                    nameBool = false;
-                    currentName = "";
-                    //^Currently prints out each time a name is recognized. Eventually we will need
-                    // to only print once but allow for three physical high fives to be doled out
-                }
+                        if(text == mostRecent){
+                            var incQty = Number(newObj.qty);
+                            incQty = incQty + 1;
+                            newObj.qty = incQty;
 
-            };
+                            newObj.recip = newObj.recip + "  " + currentName;
+
+
+                            //console.log(newObj.qty);
+                        }else{
+                            newObj.text= text;
+                            newObj.redeemed = redeemed;
+                            newObj.qty = qty;
+                            newObj.creator = creator;
+                            newObj.recip = currentName;
+
+                            testArray.push(newObj);
+                        }
+
+
+                    }
+                }
+                nameBool = false;
+                currentName = "";
+            }
 
         };
-    };
 
-    getJSON();
-    //console.log(highFives);
+    });
 
     var num = 0;
 
     function cycleHF(){
-        $("#swap").html(highFives[num]);
+        $(".recipH").html(testArray[num].recip);
+
+        $("#hfText").html(highFives[num].text);
+
+        $(".creatorH").html(testArray[num].creator);
+        console.log(testArray);
         window.setInterval(function () {
             // increase by num 1, reset to 0 at 4
-            num = (num + 1) % highFives.length;
-            $("#swap").html(highFives[num]);
+            num = (num + 1) % testArray.length;
+
+            $(".recipH").html(testArray[num].recip);
+
+            $("#hfText").html(testArray[num].text);
+
+            $(".creatorH").html(testArray[num].creator);
             //console.log(num);
-        }, 2500);
+        }, 4000);
     };
 
     cycleHF();
 
 
-});
+}
