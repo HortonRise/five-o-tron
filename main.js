@@ -34,9 +34,6 @@ function display(results) {
     });
 }
 
-
-
-
 function process(results) {
 
     var highFives = [];
@@ -58,7 +55,7 @@ function process(results) {
 
         //console.log(creator);
         var hfText = text;
-        console.log(hfText);
+        //console.log(hfText);
         var textLength = hfText.length;
         var nameBool = false;
         var currentName = "";
@@ -107,8 +104,6 @@ function process(results) {
 
                             testArray.push(newObj);
                         }
-
-
                     }
                 }
                 nameBool = false;
@@ -124,7 +119,7 @@ function process(results) {
     function swapHF(){
         num = (num + 1) % testArray.length;
 
-        console.log(testArray[num]);
+        //console.log(testArray[num]);
 
         $(".recipH").html(testArray[num].recip);
 
@@ -150,12 +145,12 @@ function process(results) {
         setTimeout(function(){
             $("#triangle-left").removeClass("quickInvisible");
             $("#triangle-left").addClass("quickVisible");
-        }, 300);
+        }, 280);
 
         setTimeout(function(){
             $("#triangle-left").css("margin-top","-60px");
             $("#triangle-left").css("margin-left","80%");
-        },310);
+        },280);
 
         setTimeout(function(){
             $(".recipH").removeClass("invisible");
