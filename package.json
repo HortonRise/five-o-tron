@@ -1,0 +1,20 @@
+{
+  "name": "highfive",
+  "version": "1.0.0",
+  "description": "high five node js server",
+  "main": "index.js",
+  "dependencies": {
+    "dateformat": "^1.0.12",
+    "express": "^4.14.0",
+    "jQuery": "^1.7.4",
+    "jquery": "^3.1.0",
+    "mysql": "^2.11.1",
+    "request": "^2.74.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
