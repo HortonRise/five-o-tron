@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////
 // 15Five JS File
 ///////////////////////////////////////////////////////////////
+var started = 0;
 function download() {
   $.ajax({
           dataType: "json",
@@ -258,8 +259,11 @@ function process(results) {
         window.setInterval(swapHF, 11000);
     };
 
+    if (started == 0) {
+      started = 1;
+      cycleHF();
+    }
 
-    cycleHF();
 
 
 }
