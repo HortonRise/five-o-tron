@@ -35,7 +35,7 @@ var highfives = function(res) {
 ///////////////////// ROUTINGS //////////////
 
 app.get('/', function (req, res) {
-  res.send('Hello world!');
+  //res.send('Hello world!');
 });
 
 app.get('/highfives', function(req, res) {
@@ -44,7 +44,7 @@ app.get('/highfives', function(req, res) {
 } );
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('15Five App running on port 3000!');
 });
 
 //////////////////// UPDATE HIGH FIVES //////////////
