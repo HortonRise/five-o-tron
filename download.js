@@ -3,11 +3,7 @@ var request = require('request');
 var mysql = require('mysql');
 var dateFormat = require('dateformat');
 var now = new Date();
-<<<<<<< HEAD
 var repeat = 0;
-=======
->>>>>>> refs/remotes/origin/master
-
 
 var lastSearchDate;
 var dformat;
@@ -78,16 +74,10 @@ connection.query('SELECT lastSearchDate, DATE_FORMAT(lastSearchDate, "%Y-%m-%d")
           }
           //Update last search date TimeStamp
           if ( dateFormat(fiveTS, "d") != dateFormat(now, "d") ) {
-<<<<<<< HEAD
 		repeat = 1;
             	console.log("Date needs to be updated to next day...");
             	newDate = newDate.addDays(1);
             	fiveTS = dateFormat(newDate, "yyyy-mm-dd") ;
-=======
-            console.log("Date needs to be updated to next day...");
-            newDate = newDate.addDays(1);
-            fiveTS = dateFormat(newDate, "yyyy-mm-dd") ;
->>>>>>> refs/remotes/origin/master
           }
           connection.query("UPDATE settings SET lastSearchDate = ?", [fiveTS], function(err, result) {
               console.log("Ran 15Five API. Added " + newCount +" new rows. Updated Timestamp to " + fiveTS);

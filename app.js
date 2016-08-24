@@ -2,10 +2,15 @@ var express = require('express');
 var mysql = require('mysql');
 var exec = require('child_process').exec;
 var child;
-var Gpio = require('pigpio').Gpio,
-  motor = new Gpio(23, {mode: Gpio.OUTPUT}),
-  pulseWidth = 500,
-  increment = 100;
+const os = require('os');
+var hasGPIO = false;
+if (os.platform()  == "linux") {
+	hasGPIO = true;
+	var Gpio = require('pigpio').Gpio,
+	  motor = new Gpio(23, {mode: Gpio.OUTPUT}),
+	  pulseWidth = 500,
+	  increment = 100;
+}
 
 var app = express();
 app.use(express.static('public'));
@@ -77,10 +82,12 @@ app.get('/highfives', function(req, res) {
 } );
 
 app.get('/redeem', function(req, res) {
-	motor.servoWrite(1200);
-	setTimeout(function () {
-  		motor.servoWrite(2000);
-	}, 500);
+	if (hasGPIO) {
+		motor.servoWrite(1200);
+		setTimeout(function () {
+	  		motor.servoWrite(2000);
+		}, 500);
+	}
 	var fiveID = req.param('fiveID');
 	redeem(fiveID);
 	res.send('High five #' + fiveID);
