@@ -2,6 +2,12 @@
 // 15Five JS File
 ///////////////////////////////////////////////////////////////
 var started = 0;
+var fiveTimer;
+var ready = false;
+var num = 0;
+var testArray;
+var currentID;
+
 function download() {
   $.ajax({
           dataType: "json",
@@ -17,6 +23,25 @@ function download() {
           process(results);
 
       });
+}
+
+function redeem() {
+   if (ready && testArray[num].redeemed == 0) {
+	$(".redeemedIcon2").removeClass("displayNone");
+	$(".redeemedIcon").addClass("displayNone");
+	testArray[num].redeemed = 1;
+	console.log("Redeeming: " + currentID);
+	  $.ajax({
+	          dataType: "json",
+	          method: "GET",
+	          url: "/redeem?fiveID="+currentID,
+	          data: {}
+	      })
+	      .done(function(results) {
+	          console.log(results);
+     	 });
+    }
+
 }
 
 function initialLoad() {
@@ -48,15 +73,16 @@ function process(results) {
     var highFives = [];
     //console.log(results);
 
-    var testArray = [];
+    testArray = [];
 
 
     var cx = ["@AnthonyAffinati", "@AmandaNyren", "@AlexArkoosh", "@AmelieProvosty", "@MikeGreen", "@KatelynMuenck", "@JeanZhang", "@JonathanLarson", "@JohnHorton", "@WillWatkins", "@StevenChen","@KyleBuckley", "@VanessaLacy","@ClairLoewy","@LouAmodeo"];
 
     jQuery.each(results, function(i, val) {
         //console.log(this);
-        var newObj = {text:"", redeemed:"", qty:"", creator:"", recip:"", date:""};
+        var newObj = {id:"", text:"", redeemed:"", qty:"", creator:"", recip:"", date:""};
         var text = val['text'];
+	var id = val['id'];
         var redeemed = val['redeemed'];
         var qty = val['qty'];
         var creator = "@" + val['first_name']+ val['last_name'];
@@ -110,6 +136,7 @@ function process(results) {
                             newObj.creator = creator;
                             newObj.recip = currentName;
                             newObj.date = date;
+			    newObj.id = id;
                             testArray.push(newObj);
                         }
                     }
@@ -122,33 +149,34 @@ function process(results) {
 
     });
 
-    var num = 0;
+    if (started == 0) {
+      started = 1;
+      swapHF();
+    }
+}
 
-    function swapHF(){
-        num = (num + 1) % testArray.length;
+function swapHF(){
+	ready = false;
+        displayNext();
+        fadeIn();
+	fiveTimer = window.setTimeout(fadeOut, 7900);
+}
 
-        //console.log(testArray[num]);
-
+function displayNext() {
+	num = (num + 1) % testArray.length;
         $(".recipH").html(testArray[num].recip);
-
         $("#hfText").html(testArray[num].text);
-
         $(".creatorH").html(testArray[num].creator);
-
         $(".date").html(testArray[num].date);
+	currentID = testArray[num].id;
+}
 
-        setTimeout(function(){
+
+function fadeIn() {
+	setTimeout(function(){
             $(".textWrapper").addClass("scaleUp");
             $(".textWrapper").removeClass("scaleDown");
         }, 200);
-
-        // setTimeout(function(){
-        //     $(".textWrapper").addClass("margin-top-nudge");
-        // }, 200);
-        //
-        // setTimeout(function(){
-        //     $(".textWrapper").removeClass("margin-top-nudge");
-        // }, 360);
 
         setTimeout(function(){
             $("#triangle-left").removeClass("quickInvisible");
@@ -162,108 +190,95 @@ function process(results) {
 
         setTimeout(function(){
             $(".recipH").removeClass("invisible");
-        }, 1200);
+        }, 900);
 
         setTimeout(function(){
             $("#hfText").removeClass("invisible");
-        }, 1600);
+        }, 900);
 
         setTimeout(function(){
             if(testArray[num].redeemed == "1"){
                 $(".redeemedIcon2").removeClass("displayNone");
                 $(".redeemedIcon").addClass("displayNone");
-            }
+            } else {
+		$(".redeemedIcon").removeClass("displayNone");
+                $(".redeemedIcon2").addClass("displayNone");
+	    }
         }, 1600);
 
         setTimeout(function(){
             $(".creatorH").removeClass("invisible");
             $(".redeemedCircle").removeClass("iconScaleDown");
             $(".redeemedCircle").addClass("iconScaleUp");
-        }, 2000);
+        }, 900);
 
         setTimeout(function(){
             $(".date").removeClass("invisible");
-        }, 2100);
+		ready = true;
+        }, 1000);
+	
+}
 
-
-///////
-///////
-/////// Transition In ^
-/////// Transition Out v
-///////
-///////
-
-
-        setTimeout(function(){
-            $(".date").addClass("invisible");
-        }, 7900);
+function fadeOut() {
+	ready = false;
+        $(".date").addClass("invisible");
 
         setTimeout(function(){
             $(".creatorH").addClass("invisible");
-        }, 8000);
+        }, 100);
 
         setTimeout(function(){
             $("#hfText").addClass("invisible");
-        }, 8100);
+        }, 200);
+	
+	setTimeout(function(){
+            $("#triangle-left").css("margin-top","-200px");
+            $("#triangle-left").css("margin-left","60%");
+        },280);
+
+        setTimeout(function(){
+            $("#triangle-left").removeClass("quickVisible");
+            $("#triangle-left").addClass("quickInvisible");
+        }, 290);
 
         setTimeout(function(){
             $(".recipH").addClass("invisible");
             $(".redeemedCircle").removeClass("iconScaleUp");
             $(".redeemedCircle").addClass("iconScaleDown");
-        }, 8200);
+        }, 300);
 
-
-        setTimeout(function(){
-            $("#triangle-left").css("margin-top","-200px");
-            $("#triangle-left").css("margin-left","60%");
-        },8180);
-
-        setTimeout(function(){
-            $("#triangle-left").removeClass("quickVisible");
-            $("#triangle-left").addClass("quickInvisible");
-        }, 8190);
-
-        setTimeout(function(){
+	setTimeout(function(){
             $(".textWrapper").addClass("scaleDown");
             $(".textWrapper").removeClass("scaleUp");
-        }, 8500);
+        }, 600);
 
+	setTimeout(function() {
+		swapHF();
+	}, 2000);
+}
 
-    };
+function next() {
+	if (ready) {
+		clearTimeout(fiveTimer);
+		displayNext();
+		if(testArray[num].redeemed == "1"){
+	                $(".redeemedIcon2").removeClass("displayNone");
+	                $(".redeemedIcon").addClass("displayNone");
+	            } else {
+			$(".redeemedIcon").removeClass("displayNone");
+	                $(".redeemedIcon2").addClass("displayNone");
+	    	}
+		fiveTimer = window.setTimeout(fadeOut, 7900);
+	} else {
+	}
+}
 
-    function cycleHF(){
-        // $(".recipH").html(testArray[num].recip);
-        //
-        // $("#hfText").html(highFives[num].text);
-        //
-        // $(".creatorH").html(testArray[num].creator);
-        // console.log(testArray);
-        // window.setInterval(function () {
-        //     // increase by num 1, reset to 0 at 4
-        //     num = (num + 1) % testArray.length;
-        //
-        //     $(".recipH").html(testArray[num].recip);
-        //
-        //     $("#hfText").html(testArray[num].text);
-        //
-        //     $(".creatorH").html(testArray[num].creator);
-        //     //console.log(num);
-        //
-        //     setTimeout(function(){
-        //         $("#hfText").addClass("invisible");
-        //     }, 3000);
-        //
-        // }, 5000);
+window.onkeyup = function(e) {
+   var key = e.keyCode ? e.keyCode : e.which;
 
-        swapHF();
-        window.setInterval(swapHF, 11000);
-    };
-
-    if (started == 0) {
-      started = 1;
-      cycleHF();
-    }
-
-
-
+   if (key == 38) {
+       next();
+   }else if (key == 40) {
+       redeem();
+   }
 }

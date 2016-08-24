@@ -1,13 +1,22 @@
 //Load the request module
 var request = require('request');
 var mysql = require('mysql');
-var dateformat = require('dateformat');
+var dateFormat = require('dateformat');
+var now = new Date();
+var repeat = 0;
 
 
 var lastSearchDate;
 var dformat;
 var fiveTS;
 var newCount = 0;
+
+Date.prototype.addDays = function(days)
+{
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
 
 //Pull the most recent date from the database
 var connection = mysql.createConnection({
@@ -65,11 +74,27 @@ connection.query('SELECT lastSearchDate, DATE_FORMAT(lastSearchDate, "%Y-%m-%d")
            }
           }
           //Update last search date TimeStamp
+          if ( dateFormat(fiveTS, "d") != dateFormat(now, "d") ) {
+		repeat = 1;
+            	console.log("Date needs to be updated to next day...");
+            	newDate = newDate.addDays(1);
+            	fiveTS = dateFormat(newDate, "yyyy-mm-dd") ;
+          }
           connection.query("UPDATE settings SET lastSearchDate = ?", [fiveTS], function(err, result) {
               console.log("Ran 15Five API. Added " + newCount +" new rows. Updated Timestamp to " + fiveTS);
           });
-
-          connection.end();
+	  connection.end();
+	  if (false) {
+		child = exec('node download.js {{args}}',
+		    function (error, stdout, stderr) {
+		      console.log('stdout: ' + stdout);
+		      console.log('stderr: ' + stderr);
+		      if (error !== null) {
+		        console.log('exec error: ' + error);
+		      }
+ 		 });
+	  }
+          
       }
   });
 
