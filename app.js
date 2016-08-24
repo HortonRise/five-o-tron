@@ -16,13 +16,14 @@ var app = express();
 app.use(express.static('public'));
 
 child = exec('node download.js {{args}}',
-    function (error, stdout, stderr) {
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
-  });
+
+  function (error, stdout, stderr) {
+    console.log('stdout: ' + stdout);
+    console.log('stderr: ' + stderr);
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+});
 
 
 var highfives = function(res) {
@@ -72,12 +73,7 @@ var redeem = function(id) {
 
 ///////////////////// ROUTINGS //////////////
 
-app.get('/', function (req, res) {
-  //res.send('Hello world!');
-});
-
 app.get('/highfives', function(req, res) {
-
   highfives(res);
 } );
 
@@ -111,7 +107,3 @@ setInterval(function(){
   });
 
 }, 60 * 10 * 1000);
-
-
-
-
