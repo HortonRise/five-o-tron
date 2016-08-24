@@ -6,6 +6,14 @@ var child;
 var app = express();
 app.use(express.static('public'));
 
+child = exec('node download.js {{args}}',
+  function (error, stdout, stderr) {
+    console.log('stdout: ' + stdout);
+    console.log('stderr: ' + stderr);
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+});
 
 var highfives = function(res) {
   var connection = mysql.createConnection({
@@ -34,12 +42,7 @@ var highfives = function(res) {
 
 ///////////////////// ROUTINGS //////////////
 
-app.get('/', function (req, res) {
-  //res.send('Hello world!');
-});
-
 app.get('/highfives', function(req, res) {
-
   highfives(res);
 } );
 
