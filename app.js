@@ -71,6 +71,7 @@ var redeem = function(id) {
   connection.end();
 }
 
+
 ///////////////////// ROUTINGS //////////////
 
 app.get('/highfives', function(req, res) {

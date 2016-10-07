@@ -206,7 +206,7 @@ h3 {
 }
 
 #buttons div {
-	width: 49.8%;
+	width: 49%;
 	height:100%;
 	cursor: pointer;
 	display: inline-block;
@@ -216,6 +216,56 @@ h3 {
 
 #buttons div:hover {
 	background:#3BC6F4;
+}
+
+
+
+.countdown{
+    display: block;
+    margin-top: 13%;
+    position: relative;
+}
+
+#handImg {
+    width: 100%;
+    opacity: .1;
+    position: relative;
+    /*left: 156px;*/
+    z-index: -1;
+    transform: scale(.6);
+    margin: 0px auto;
+    margin-left: -35px;
+    transition: transform 1s ease-in-out;
+}
+
+.hidden {
+    display: none;
+}
+
+.countdownTimer{
+    transition: all 1.2s;
+    position: absolute;
+    width: 300px;
+    top: 28%;
+    left: 31%;
+    font-size: 250px;
+    color: #113a87;
+    z-index: 20;
+    opacity: .7;
+    transform: scale(.65);
+}
+
+.getReady{
+    width: 100%;
+    text-align: center;
+    margin-top: 50%;
+}
+
+.getReadyText{
+    font-size: 190px;
+    color: #113a87;
+    opacity: 1;
+    line-height: 200px;
 }
 
 /*

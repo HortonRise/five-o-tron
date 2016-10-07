@@ -21,7 +21,6 @@ function download() {
           //console.log(results);
           //display(results);
           process(results);
-
       });
 }
 
@@ -41,7 +40,6 @@ function redeem() {
 	          console.log(results);
      	 });
     }
-
 }
 
 function initialLoad() {
@@ -82,7 +80,7 @@ function process(results) {
         //console.log(this);
         var newObj = {id:"", text:"", redeemed:"", qty:"", creator:"", recip:"", date:""};
         var text = val['text'];
-	var id = val['id'];
+	    var id = val['id'];
         var redeemed = val['redeemed'];
         var qty = val['qty'];
         var creator = "@" + val['first_name']+ val['last_name'];
@@ -171,6 +169,96 @@ function displayNext() {
 	currentID = testArray[num].id;
 }
 
+var countdown = function(){
+    ready = false;
+	clearTimeout(fiveTimer);
+    $(".getReady").addClass("hidden");
+
+    $(".countdownTimer").css("transform","scale(.65)");
+    $(".countdownTimer").css("opacity", ".7");
+    $(".countdownTimer").css("transition","all 1.2s");
+    $(".countdown").removeClass("hidden");
+
+    downcount(4);
+
+}
+
+var downcount = function(currentNum){
+    currentNum--;
+
+    $(".countdownTimer").html(currentNum);
+    $(".countdownTimer").removeClass("hidden");
+    $(".countdownTimer").css("transform","scale(.9)");
+    $(".countdownTimer").css("opacity", "1");
+    if(currentNum!==0){
+        setTimeout(function(){
+            //$(".countdownTimer").addClass("hidden");
+            $(".countdownTimer").css("transition","all 0s");
+            $(".countdownTimer").css("transform","scale(.65)");
+            $(".countdownTimer").css("opacity", ".0");
+        },1000);
+        setTimeout(function(){
+            $(".countdownTimer").css("transition","all 1.2s");
+        },1050);
+        setTimeout(function(){
+            //$(".countdownTimer").removeClass("hidden");
+            downcount(currentNum);
+        }, 1300);
+    }else{
+        prepare("HIGH FIVE!");
+        setTimeout(function(){
+            $(".getReadyText").css("color","#ff6b0b");
+        }, 200);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#38C6F4");
+        }, 400);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#B9D531");
+        }, 600);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#113a87");
+        }, 800);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#ff6b0b");
+        }, 1000);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#38C6F4");
+        }, 1200);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#B9D531");
+        }, 1400);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#113a87");
+        }, 1600);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#ff6b0b");
+        }, 1800);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#38C6F4");
+        }, 2000);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#B9D531");
+        }, 2200);
+        setTimeout(function(){
+            $(".getReadyText").css("color","#113a87");
+        }, 2400);
+
+        setTimeout(function(){
+            $(".getReady").addClass("hidden");
+            $(".countdown").addClass("hidden");
+            $(".highfive").removeClass("hidden");
+            ready = true;
+        }, 2600);
+    }
+}
+
+var prepare = function(text){
+    $(".countdown").addClass("hidden");
+    $(".highfive").addClass("hidden");
+    $(".getReady").removeClass("hidden");
+    $('.getReadyText').html(text);
+}
+
 
 function fadeIn() {
 	setTimeout(function(){
@@ -216,7 +304,7 @@ function fadeIn() {
             $(".date").removeClass("invisible");
 		ready = true;
         }, 1000);
-	
+
 }
 
 function fadeOut() {
@@ -230,7 +318,7 @@ function fadeOut() {
         setTimeout(function(){
             $("#hfText").addClass("invisible");
         }, 200);
-	
+
 	setTimeout(function(){
             $("#triangle-left").css("margin-top","-200px");
             $("#triangle-left").css("margin-left","60%");
@@ -278,7 +366,15 @@ window.onkeyup = function(e) {
 
    if (key == 38) {
        next();
-   }else if (key == 40) {
-       redeem();
+   }else if (key == 40 && ready && testArray[num].redeemed == 0) {
+       prepare("GET READY");
+       setTimeout(function(){
+           countdown();
+       }, 1200);
+
+       setTimeout(function(){
+           redeem();
+           fiveTimer = window.setTimeout(fadeOut, 7900);
+       }, 11000);
    }
 }

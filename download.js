@@ -93,7 +93,7 @@ connection.query('SELECT lastSearchDate, DATE_FORMAT(lastSearchDate, "%Y-%m-%d")
 		      }
  		 });
 	  }
-          
+
       }
   });
 
