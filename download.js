@@ -2,6 +2,7 @@
 var request = require('request');
 var mysql = require('mysql');
 var dateFormat = require('dateformat');
+const os = require('os');
 var now = new Date();
 var repeat = 0;
 
@@ -9,6 +10,18 @@ var lastSearchDate;
 var dformat;
 var fiveTS;
 var newCount = 0;
+
+connectionVars = {
+    host     : 'localhost',
+    user     : 'root',
+    password : 'root',
+    database : 'highfive',
+		port: 8889
+}
+if (os.platform() == "win32") {
+	delete connectionVars['port'];
+}
+
 
 Date.prototype.addDays = function(days)
 {
@@ -18,12 +31,7 @@ Date.prototype.addDays = function(days)
 }
 
 //Pull the most recent date from the database
-var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'root',
-  database : 'highfive'
-});
+var connection = mysql.createConnection(connectionVars);
 
 connection.connect();
 

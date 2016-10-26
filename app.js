@@ -4,6 +4,19 @@ var exec = require('child_process').exec;
 var child;
 const os = require('os');
 var hasGPIO = false;
+
+
+connectionVars = {
+    host     : 'localhost',
+    user     : 'root',
+    password : 'root',
+    database : 'highfive',
+		port: 8889
+}
+if (os.platform() == "win32") {
+	delete connectionVars['port'];
+}
+
 if (os.platform()  == "linux") {
 	hasGPIO = true;
 	var Gpio = require('pigpio').Gpio,
@@ -11,6 +24,7 @@ if (os.platform()  == "linux") {
 	  pulseWidth = 500,
 	  increment = 100;
 }
+
 
 var app = express();
 app.use(express.static('public'));
@@ -27,12 +41,7 @@ child = exec('node download.js {{args}}',
 
 
 var highfives = function(res) {
-  var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
-    database : 'highfive'
-  });
+  var connection = mysql.createConnection(connectionVars);
 
   connection.connect();
 
@@ -52,12 +61,7 @@ var highfives = function(res) {
 }
 
 var redeem = function(id) {
-	var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : 'root',
-    database : 'highfive'
-  });
+	var connection = mysql.createConnection(connectionVars);
 
   connection.connect();
 
@@ -77,6 +81,7 @@ var redeem = function(id) {
 app.get('/highfives', function(req, res) {
   highfives(res);
 } );
+
 
 app.get('/redeem', function(req, res) {
 	if (hasGPIO) {

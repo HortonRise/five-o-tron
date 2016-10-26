@@ -7,38 +7,51 @@ var ready = false;
 var num = 0;
 var testArray;
 var currentID;
+var colors = [
+    "#ff6b0b",
+    "#38C6F4",
+    "#B9D531",
+    "#113a87",
+    "#ff6b0b",
+    "#38C6F4",
+    "#B9D531",
+    "#113a87",
+    "#ff6b0b",
+    "#38C6F4",
+    "#B9D531",
+    "#113a87"
+];
 
 function download() {
-  $.ajax({
-          dataType: "json",
-          method: "GET",
-          url: "/highfives",
-          data: null
-      })
-      //When you recieve it, run the JSON through the refresh function to update the browser
-      .done(function(results) {
-          //console.log(msg);
-          //console.log(results);
-          //display(results);
-          process(results);
-      });
+    $.ajax({
+            dataType: "json",
+            method: "GET",
+            url: "/highfives",
+            data: null
+        })
+        //When you recieve it, run the JSON through the refresh function to update the browser
+        .done(function(results) {
+            process(results);
+        });
 }
 
 function redeem() {
-   if (ready && testArray[num].redeemed == 0) {
-	$(".redeemedIcon2").removeClass("displayNone");
-	$(".redeemedIcon").addClass("displayNone");
-	testArray[num].redeemed = 1;
-	console.log("Redeeming: " + currentID);
-	  $.ajax({
-	          dataType: "json",
-	          method: "GET",
-	          url: "/redeem?fiveID="+currentID,
-	          data: {}
-	      })
-	      .done(function(results) {
-	          console.log(results);
-     	 });
+    if (testArray[num].redeemed == 0) {
+        $(".redeemedIcon2").removeClass("displayNone");
+        $(".redeemedIcon").addClass("displayNone");
+        testArray[num].redeemed = 1;
+        console.log("Redeeming: " + currentID);
+        $.ajax({
+                dataType: "json",
+                method: "GET",
+                url: "/redeem?fiveID=" + currentID,
+                data: {}
+            })
+            .done(function(results) {
+                console.log(results);
+            });
+    } else {
+        console.log("not ready");
     }
 }
 
@@ -46,204 +59,102 @@ function initialLoad() {
     //This is the intitial function that runs.
     //Request the current liteBrite color grid from lb_json
     download();
-    setInterval(function(){
-      download();
-      console.log("Requested Update");
+    setInterval(function() {
+        download();
+        console.log("Requested Update");
     }, 60 * 10 * 1000);
 }
 
-
-function display(results) {
-    //lights is a json array of the individual rows and columns
-    //each object in the data set has a row, col, and r/g/b value
-    jQuery.each(results, function(i, val) {
-        var text = val['text'];
-        var redeemed = val['redeemed'];
-        var qty = val['qty'];
-        var creator = "@" + val['first_name']+ val['last_name'];
-        var date = val['date'];
-        //console.log(text);
-    });
-}
-
 function process(results) {
-
     var highFives = [];
-    //console.log(results);
-
     testArray = [];
-
-
-    var cx = ["@AnthonyAffinati", "@AmandaNyren", "@AlexArkoosh", "@AmelieProvosty", "@MikeGreen", "@KatelynMuenck", "@JeanZhang", "@JonathanLarson", "@JohnHorton", "@WillWatkins", "@StevenChen","@KyleBuckley", "@VanessaLacy","@ClairLoewy","@LouAmodeo"];
-
+    //Loop through each of the results an add them to the array
     jQuery.each(results, function(i, val) {
-        //console.log(this);
-        var newObj = {id:"", text:"", redeemed:"", qty:"", creator:"", recip:"", date:""};
-        var text = val['text'];
-	    var id = val['id'];
-        var redeemed = val['redeemed'];
-        var qty = val['qty'];
-        var creator = "@" + val['first_name']+ val['last_name'];
-        var date = val['date'];
-
-        //console.log(creator);
-        var hfText = text;
-        //console.log(hfText);
-        var textLength = hfText.length;
-        var nameBool = false;
-        var currentName = "";
-        for(var j=0; j<textLength; j++){
-            // console.log(hfText[j] + " " + nameBool)
-            if(hfText[j]=="@"){
-                nameBool = true;
-                currentName = currentName + hfText[j];
-                //console.log("@");
-            }else if (nameBool && hfText[j]!="<"){
-                currentName = currentName + hfText[j];
-                //console.log(currentName);
-            //}else if (nameBool && hfText[j]=="<" || hfText[j]=="," || hfText[j]==" "){
-            }else if (nameBool && hfText[j]=="<"){
-                // console.log(hfText[j] + " " + nameBool)
-                // console.log("< FOUND");
-                var cxLength = cx.length;
-                for (var h=0; h<cxLength; h++){
-                    if(currentName==cx[h]){
-                        //console.log(hfText);
-                        //highFives.push(hfText);
-                        highFives.push(this);
-
-                        var mostRecent;
-                        if(testArray.length>0){
-                            mostRecent = testArray[(testArray.length - 1)].text;
-                        }else{
-                            //mostRecent = 0;
-                        }
-                        if(text == mostRecent){
-                            var incQty = Number(newObj.qty);
-                            incQty = incQty + 1;
-                            newObj.qty = incQty;
-
-                            newObj.recip = newObj.recip + "  " + currentName;
-
-
-                            //console.log(newObj.qty);
-                        }else{
-                            newObj.text= text;
-                            newObj.redeemed = redeemed;
-                            newObj.qty = qty;
-                            newObj.creator = creator;
-                            newObj.recip = currentName;
-                            newObj.date = date;
-			    newObj.id = id;
-                            testArray.push(newObj);
-                        }
-                    }
-                }
-                nameBool = false;
-                currentName = "";
-            }
-
+        var newObj = {
+            id: val['id'],
+            text: val['text'],
+            redeemed: val['redeemed'],
+            qty: val['qty'],
+            creator: "@" + val['first_name'] + val['last_name'],
+            recip: "",
+            date: val['date']
         };
-
+        testArray.push(newObj);
     });
 
     if (started == 0) {
-      started = 1;
-      swapHF();
+        started = 1;
+        swapHF();
     }
 }
 
-function swapHF(){
-	ready = false;
-        displayNext();
-        fadeIn();
-	fiveTimer = window.setTimeout(fadeOut, 7900);
+function swapHF() {
+    ready = false;
+    displayNext();
+    fadeIn();
+    fiveTimer = window.setTimeout(fadeOut, 7900);
 }
 
 function displayNext() {
-	num = (num + 1) % testArray.length;
-        $(".recipH").html(testArray[num].recip);
-        $("#hfText").html(testArray[num].text);
-        $(".creatorH").html(testArray[num].creator);
-        $(".date").html(testArray[num].date);
-	currentID = testArray[num].id;
+    num = (num + 1) % testArray.length;
+    $(".recipH").html(testArray[num].recip);
+    $("#hfText").html(testArray[num].text);
+    $(".creatorH").html(testArray[num].creator);
+    $(".date").html(testArray[num].date);
+    currentID = testArray[num].id;
 }
 
-var countdown = function(){
+var changeColors = function(i) {
+    setTimeout(function() {
+        $(".getReadyText").css("color", colors[i]);
+    }, (i + 1) * 200);
+}
+
+var startCountdown = function() {
     ready = false;
-	clearTimeout(fiveTimer);
+    clearTimeout(fiveTimer);
     $(".getReady").addClass("hidden");
-
-    $(".countdownTimer").css("transform","scale(.65)");
+    $(".countdownTimer").css("transform", "scale(.65)");
     $(".countdownTimer").css("opacity", ".7");
-    $(".countdownTimer").css("transition","all 1.2s");
+    $(".countdownTimer").css("transition", "all 1.2s");
     $(".countdown").removeClass("hidden");
-
     downcount(4);
-
 }
 
-var downcount = function(currentNum){
+var downcount = function(currentNum) {
     currentNum--;
 
     $(".countdownTimer").html(currentNum);
     $(".countdownTimer").removeClass("hidden");
-    $(".countdownTimer").css("transform","scale(.9)");
+    $(".countdownTimer").css("transform", "scale(.9)");
     $(".countdownTimer").css("opacity", "1");
-    if(currentNum!==0){
-        setTimeout(function(){
+    if (currentNum !== 0) {
+        setTimeout(function() {
             //$(".countdownTimer").addClass("hidden");
-            $(".countdownTimer").css("transition","all 0s");
-            $(".countdownTimer").css("transform","scale(.65)");
+            $(".countdownTimer").css("transition", "all 0s");
+            $(".countdownTimer").css("transform", "scale(.65)");
             $(".countdownTimer").css("opacity", ".0");
-        },1000);
-        setTimeout(function(){
-            $(".countdownTimer").css("transition","all 1.2s");
-        },1050);
-        setTimeout(function(){
+        }, 1000);
+        setTimeout(function() {
+            $(".countdownTimer").css("transition", "all 1.2s");
+        }, 1050);
+        setTimeout(function() {
             //$(".countdownTimer").removeClass("hidden");
             downcount(currentNum);
         }, 1300);
-    }else{
+    } else {
+        //pick a random sfx to play
+        var rand = Math.floor((Math.random() * 5) + 1);
+        new Audio('sfx/sfx' + rand + '.mp3').play();
+        //change the wording
         prepare("HIGH FIVE!");
-        setTimeout(function(){
-            $(".getReadyText").css("color","#ff6b0b");
-        }, 200);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#38C6F4");
-        }, 400);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#B9D531");
-        }, 600);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#113a87");
-        }, 800);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#ff6b0b");
-        }, 1000);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#38C6F4");
-        }, 1200);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#B9D531");
-        }, 1400);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#113a87");
-        }, 1600);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#ff6b0b");
-        }, 1800);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#38C6F4");
-        }, 2000);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#B9D531");
-        }, 2200);
-        setTimeout(function(){
-            $(".getReadyText").css("color","#113a87");
-        }, 2400);
+        //send the ajax request to trigger the motor
+        redeem();
 
-        setTimeout(function(){
+        for (var i = 0; i < colors.length; i++) {
+            changeColors(i);
+        }
+        setTimeout(function() {
             $(".getReady").addClass("hidden");
             $(".countdown").addClass("hidden");
             $(".highfive").removeClass("hidden");
@@ -252,7 +163,7 @@ var downcount = function(currentNum){
     }
 }
 
-var prepare = function(text){
+var prepare = function(text) {
     $(".countdown").addClass("hidden");
     $(".highfive").addClass("hidden");
     $(".getReady").removeClass("hidden");
@@ -261,120 +172,118 @@ var prepare = function(text){
 
 
 function fadeIn() {
-	setTimeout(function(){
-            $(".textWrapper").addClass("scaleUp");
-            $(".textWrapper").removeClass("scaleDown");
-        }, 200);
+    setTimeout(function() {
+        $(".textWrapper").addClass("scaleUp");
+        $(".textWrapper").removeClass("scaleDown");
+    }, 200);
 
-        setTimeout(function(){
-            $("#triangle-left").removeClass("quickInvisible");
-            $("#triangle-left").addClass("quickVisible");
-        }, 280);
+    setTimeout(function() {
+        $("#triangle-left").removeClass("quickInvisible");
+        $("#triangle-left").addClass("quickVisible");
+    }, 280);
 
-        setTimeout(function(){
-            $("#triangle-left").css("margin-top","-60px");
-            $("#triangle-left").css("margin-left","80%");
-        },280);
+    setTimeout(function() {
+        $("#triangle-left").css("margin-top", "-60px");
+        $("#triangle-left").css("margin-left", "80%");
+    }, 280);
 
-        setTimeout(function(){
-            $(".recipH").removeClass("invisible");
-        }, 900);
+    setTimeout(function() {
+        $(".recipH").removeClass("invisible");
+    }, 900);
 
-        setTimeout(function(){
-            $("#hfText").removeClass("invisible");
-        }, 900);
+    setTimeout(function() {
+        $("#hfText").removeClass("invisible");
+    }, 900);
 
-        setTimeout(function(){
-            if(testArray[num].redeemed == "1"){
-                $(".redeemedIcon2").removeClass("displayNone");
-                $(".redeemedIcon").addClass("displayNone");
-            } else {
-		$(".redeemedIcon").removeClass("displayNone");
-                $(".redeemedIcon2").addClass("displayNone");
-	    }
-        }, 1600);
+    setTimeout(function() {
+        if (testArray[num].redeemed == "1") {
+            $(".redeemedIcon2").removeClass("displayNone");
+            $(".redeemedIcon").addClass("displayNone");
+        } else {
+            $(".redeemedIcon").removeClass("displayNone");
+            $(".redeemedIcon2").addClass("displayNone");
+        }
+    }, 1600);
 
-        setTimeout(function(){
-            $(".creatorH").removeClass("invisible");
-            $(".redeemedCircle").removeClass("iconScaleDown");
-            $(".redeemedCircle").addClass("iconScaleUp");
-        }, 900);
+    setTimeout(function() {
+        $(".creatorH").removeClass("invisible");
+        $(".redeemedCircle").removeClass("iconScaleDown");
+        $(".redeemedCircle").addClass("iconScaleUp");
+    }, 900);
 
-        setTimeout(function(){
-            $(".date").removeClass("invisible");
-		ready = true;
-        }, 1000);
+    setTimeout(function() {
+        $(".date").removeClass("invisible");
+        ready = true;
+    }, 1000);
 
 }
 
 function fadeOut() {
-	ready = false;
-        $(".date").addClass("invisible");
+    ready = false;
+    $(".date").addClass("invisible");
 
-        setTimeout(function(){
-            $(".creatorH").addClass("invisible");
-        }, 100);
+    setTimeout(function() {
+        $(".creatorH").addClass("invisible");
+    }, 100);
 
-        setTimeout(function(){
-            $("#hfText").addClass("invisible");
-        }, 200);
+    setTimeout(function() {
+        $("#hfText").addClass("invisible");
+    }, 200);
 
-	setTimeout(function(){
-            $("#triangle-left").css("margin-top","-200px");
-            $("#triangle-left").css("margin-left","60%");
-        },280);
+    setTimeout(function() {
+        $("#triangle-left").css("margin-top", "-200px");
+        $("#triangle-left").css("margin-left", "60%");
+    }, 280);
 
-        setTimeout(function(){
-            $("#triangle-left").removeClass("quickVisible");
-            $("#triangle-left").addClass("quickInvisible");
-        }, 290);
+    setTimeout(function() {
+        $("#triangle-left").removeClass("quickVisible");
+        $("#triangle-left").addClass("quickInvisible");
+    }, 290);
 
-        setTimeout(function(){
-            $(".recipH").addClass("invisible");
-            $(".redeemedCircle").removeClass("iconScaleUp");
-            $(".redeemedCircle").addClass("iconScaleDown");
-        }, 300);
+    setTimeout(function() {
+        $(".recipH").addClass("invisible");
+        $(".redeemedCircle").removeClass("iconScaleUp");
+        $(".redeemedCircle").addClass("iconScaleDown");
+    }, 300);
 
-	setTimeout(function(){
-            $(".textWrapper").addClass("scaleDown");
-            $(".textWrapper").removeClass("scaleUp");
-        }, 600);
+    setTimeout(function() {
+        $(".textWrapper").addClass("scaleDown");
+        $(".textWrapper").removeClass("scaleUp");
+    }, 600);
 
-	setTimeout(function() {
-		swapHF();
-	}, 2000);
+    setTimeout(function() {
+        swapHF();
+    }, 2000);
 }
 
 function next() {
-	if (ready) {
-		clearTimeout(fiveTimer);
-		displayNext();
-		if(testArray[num].redeemed == "1"){
-	                $(".redeemedIcon2").removeClass("displayNone");
-	                $(".redeemedIcon").addClass("displayNone");
-	            } else {
-			$(".redeemedIcon").removeClass("displayNone");
-	                $(".redeemedIcon2").addClass("displayNone");
-	    	}
-		fiveTimer = window.setTimeout(fadeOut, 7900);
-	} else {
-	}
+    if (ready) {
+        clearTimeout(fiveTimer);
+        displayNext();
+        if (testArray[num].redeemed == "1") {
+            $(".redeemedIcon2").removeClass("displayNone");
+            $(".redeemedIcon").addClass("displayNone");
+        } else {
+            $(".redeemedIcon").removeClass("displayNone");
+            $(".redeemedIcon2").addClass("displayNone");
+        }
+        fiveTimer = window.setTimeout(fadeOut, 7900);
+    } else {}
 }
 
 window.onkeyup = function(e) {
-   var key = e.keyCode ? e.keyCode : e.which;
+    var key = e.keyCode ? e.keyCode : e.which;
 
-   if (key == 38) {
-       next();
-   }else if (key == 40 && ready && testArray[num].redeemed == 0) {
-       prepare("GET READY");
-       setTimeout(function(){
-           countdown();
-       }, 1200);
+    if (key == 38) {
+        next();
+    } else if (key == 40 && ready && testArray[num].redeemed == 0) {
+        prepare("GET READY");
+        setTimeout(function() {
+            startCountdown();
+        }, 1200);
 
-       setTimeout(function(){
-           redeem();
-           fiveTimer = window.setTimeout(fadeOut, 7900);
-       }, 11000);
-   }
+        setTimeout(function() {
+            fiveTimer = window.setTimeout(fadeOut, 7900);
+        }, 11000);
+    }
 }
