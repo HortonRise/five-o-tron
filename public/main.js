@@ -144,7 +144,7 @@ var downcount = function(currentNum) {
         }, 1300);
     } else {
         //pick a random sfx to play
-        var rand = Math.floor((Math.random() * 5) + 1);
+        var rand = Math.floor((Math.random() * 6) + 1);
         new Audio('sfx/sfx' + rand + '.mp3').play();
         //change the wording
         prepare("HIGH FIVE!");
