@@ -2,8 +2,11 @@ var express = require('express');
 var mysql = require('mysql');
 var exec = require('child_process').exec;
 var child;
+var startAngle = 1800;
 const os = require('os');
 var hasGPIO = false;
+var Player = require('player');
+
 
 
 connectionVars = {
@@ -13,7 +16,7 @@ connectionVars = {
     database : 'highfive',
 		port: 8889
 }
-if (os.platform() == "win32") {
+if (os.platform() == "win32" || os.platform() == "linux") {
 	delete connectionVars['port'];
 }
 
@@ -87,8 +90,19 @@ app.get('/redeem', function(req, res) {
 	if (hasGPIO) {
 		motor.servoWrite(1200);
 		setTimeout(function () {
-	  		motor.servoWrite(2000);
-		}, 500);
+	  		motor.servoWrite(startAngle);
+		}, 520);
+		var rand = Math.floor((Math.random() * 6) + 1);
+		// create player instance 
+		var player = new Player();
+		player.on('error', function(err){
+			  // when error occurs 
+			  console.log(err);
+		});
+		console.log(rand);
+		player.add('public/sfx/sfx' + rand + '.mp3');
+		// play now and callback when playend 
+		player.play();
 	}
 	var fiveID = req.param('fiveID');
 	redeem(fiveID);

@@ -1,0 +1,22 @@
+sudo modprobe uinput
+sudo python keyboard.py &
+sudo node app.js
+
+launcher.sh in the root directory runs the node app on startup
+This was added to the crontab 'sudo crontab -e'
+
+
+Mouse was hidden by
+sudo nano /etc/xdg/lxsession/LXDE/autostart
+
+Python script runs via sudo nano /etc/profile
+
+To turn off screensave:
+change two settings in /etc/kbd/config
+BLANK_TIME=0
+POWERDOWN_TIME=0
+----and
+Add these lines to /etc/xdg/lxsession/LXDE/autostart
+@xset s noblank
+@xset s off
+@xset -dpms
