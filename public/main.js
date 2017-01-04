@@ -4,6 +4,7 @@
 var started = 0;
 var fiveTimer;
 var ready = false;
+console.log('ready = ' + ready);
 var num = 0;
 var testArray;
 var currentID;
@@ -36,23 +37,27 @@ function download() {
 }
 
 function redeem() {
-    if (testArray[num].redeemed == 0) {
-        $(".redeemedIcon2").removeClass("displayNone");
-        $(".redeemedIcon").addClass("displayNone");
-        testArray[num].redeemed = 1;
-        console.log("Redeeming: " + currentID);
-        $.ajax({
-                dataType: "json",
-                method: "GET",
-                url: "/redeem?fiveID=" + currentID,
-                data: {}
-            })
-            .done(function(results) {
-                console.log(results);
-            });
+    if(ready){
+        if (testArray[num].redeemed == 0) {
+            $(".redeemedIcon2").removeClass("displayNone");
+            $(".redeemedIcon").addClass("displayNone");
+            testArray[num].redeemed = 1;
+            console.log("Redeeming: " + currentID);
+            $.ajax({
+                    dataType: "json",
+                    method: "GET",
+                    url: "/redeem?fiveID=" + currentID,
+                    data: {}
+                })
+                .done(function(results) {
+                    console.log(results);
+                });
+        } else {
+            console.log("not ready");
+        }
     } else {
-        console.log("not ready");
-    }
+        console.log("not ready2");
+    };
 }
 
 function initialLoad() {
@@ -90,6 +95,7 @@ function process(results) {
 
 function swapHF() {
     ready = false;
+    console.log('ready = ' + ready);
     displayNext();
     fadeIn();
     fiveTimer = window.setTimeout(fadeOut, 7900);
@@ -112,6 +118,7 @@ var changeColors = function(i) {
 
 var startCountdown = function() {
     ready = false;
+    console.log('ready = ' + ready);
     clearTimeout(fiveTimer);
     $(".getReady").addClass("hidden");
     $(".countdownTimer").css("transform", "scale(.65)");
@@ -148,17 +155,25 @@ var downcount = function(currentNum) {
         new Audio('sfx/sfx' + rand + '.mp3').play();
         //change the wording
         prepare("HIGH FIVE!");
+
+        ready = true;
+        console.log('ready = ' + ready);
+
         //send the ajax request to trigger the motor
         redeem();
+        console.log("REDEEMED " + fiveTimer);
 
         for (var i = 0; i < colors.length; i++) {
             changeColors(i);
         }
+        // clearTimeout(fiveTimer);
+        // fiveTimer = window.setTimeout(fadeOut, 5000);
         setTimeout(function() {
             $(".getReady").addClass("hidden");
             $(".countdown").addClass("hidden");
             $(".highfive").removeClass("hidden");
             ready = true;
+            console.log('ready = ' + ready);
         }, 2600);
     }
 }
@@ -172,6 +187,7 @@ var prepare = function(text) {
 
 
 function fadeIn() {
+    console.log("fadein");
     setTimeout(function() {
         $(".textWrapper").addClass("scaleUp");
         $(".textWrapper").removeClass("scaleDown");
@@ -214,12 +230,14 @@ function fadeIn() {
     setTimeout(function() {
         $(".date").removeClass("invisible");
         ready = true;
+        console.log('ready = ' + ready);
     }, 1000);
 
 }
 
 function fadeOut() {
     ready = false;
+    console.log('ready = ' + ready);
     $(".date").addClass("invisible");
 
     setTimeout(function() {
@@ -257,6 +275,7 @@ function fadeOut() {
 }
 
 function next() {
+    console.log("next");
     if (ready) {
         clearTimeout(fiveTimer);
         displayNext();
